@@ -1,4 +1,4 @@
-name: Génère la documentation de notre application Typscript Planning Poker
+name: Genere la documentation de notre application TypeScript WebApp Planning Poker Online
 
 on:
   push:

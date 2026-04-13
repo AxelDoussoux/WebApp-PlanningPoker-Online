@@ -1,4 +1,4 @@
-# Planning Poker
+# WebApp Planning Poker Online
 
 Application web de Planning Poker pour l'estimation collaborative des tâches en équipe Agile.
 

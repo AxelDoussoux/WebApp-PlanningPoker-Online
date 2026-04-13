@@ -149,21 +149,21 @@ export async function createSession(sessionName: string, pseudo: string, gameMod
  * @param setCurrentSession - Setter pour la session courante
  * @param setCurrentParticipant - Setter pour le participant courant
  */
-export async function joinSession(sessionCode: string, pseudo: string, setCurrentSession: (s: Session | null) => void, setCurrentParticipant: (p: Participant | null) => void): Promise<void> {
+export async function joinSession(sessionCode: string, pseudo: string, setCurrentSession: (s: Session | null) => void, setCurrentParticipant: (p: Participant | null) => void): Promise<{ success: boolean; error?: string }> {
   const session = await findSessionByCode(sessionCode);
   if (!session) {
     console.error('Session introuvable ou inactive.');
-    return;
+    return { success: false, error: 'Session introuvable ou inactive.' };
   }
 
   const participant = await findParticipantByName(pseudo);
   if (!participant) {
     console.error('Participant introuvable.');
-    return;
+    return { success: false, error: 'Participant introuvable.' };
   }
   if (participant.session_id) {
     console.error('Déjà connecté à une session.');
-    return;
+    return { success: false, error: 'Déjà connecté à une session.' };
   }
 
   const updatedParticipant = await addParticipantToSession(session.id, participant.id);
@@ -171,8 +171,10 @@ export async function joinSession(sessionCode: string, pseudo: string, setCurren
     setCurrentSession(session);
     setCurrentParticipant(updatedParticipant);
     console.log(`Rejoint la session: ${session.name} (Code: ${session.code})`);
+    return { success: true };
   } else {
     console.error('Échec de la connexion à la session.');
+    return { success: false, error: 'Échec de la connexion à la session.' };
   }
 }
 

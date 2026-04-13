@@ -17,7 +17,7 @@ export default function App() {
       {/* Header + Navbar */}
       <header className="bg-white shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-center">
-          <h1 className="text-4xl font-extrabold text-indigo-600">Planning Poker</h1>
+          <h1 className="text-4xl font-extrabold text-indigo-600">WebApp Planning Poker Online</h1>
         </div>
       </header>
 

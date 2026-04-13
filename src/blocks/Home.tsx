@@ -10,6 +10,7 @@ export function HomeBlock({ onOpenSession, onOpenGame }: { onOpenSession: () => 
   const [pseudo, setPseudo] = useState("")
   const [loggedIn, setLoggedIn] = useState(false)
   const [sessionCode, setSessionCode] = useState("")
+  const [joinError, setJoinError] = useState<string | null>(null)
 
   const { setCurrentSession, setCurrentParticipant, currentParticipant } = useSession()
 
@@ -27,8 +28,16 @@ export function HomeBlock({ onOpenSession, onOpenGame }: { onOpenSession: () => 
 
   // Rejoindre une session
   const handleJoin = async () => {
-    if (!sessionCode.trim()) return
-    await joinSession(sessionCode.trim(), pseudo.trim(), setCurrentSession, setCurrentParticipant)
+    setJoinError(null)
+    if (!sessionCode.trim()) {
+      setJoinError("Code de session requis.")
+      return
+    }
+    const result = await joinSession(sessionCode.trim(), pseudo.trim(), setCurrentSession, setCurrentParticipant)
+    if (!result.success) {
+      setJoinError(result.error ?? "Impossible de rejoindre la session.")
+      return
+    }
     onOpenGame()
   }
 
@@ -64,13 +73,19 @@ export function HomeBlock({ onOpenSession, onOpenGame }: { onOpenSession: () => 
             <div className="flex gap-2">
               <input
                 value={sessionCode}
-                onChange={e => setSessionCode(e.target.value)}
+                onChange={e => {
+                  setSessionCode(e.target.value)
+                  if (joinError) setJoinError(null)
+                }}
                 type="text"
                 placeholder="Code de session..."
                 className="flex-1 px-3 py-2 border rounded-lg"
               />
               <button onClick={handleJoin} className="px-4 py-2 bg-indigo-600 text-white rounded-lg">Rejoindre</button>
             </div>
+            {joinError && (
+              <p className="text-sm text-red-600">{joinError}</p>
+            )}
           </div>
         </div>
       )}
